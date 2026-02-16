@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import QuantumVisualizer from '../components/QuantumVisualizer';
 import ControlPanel from '../components/ControlPanel';
+import CircuitDiagram from '../components/CircuitDiagram';
 import { runCircuit } from '../lib/quantum/engine';
 
 export default function Home() {
@@ -16,17 +17,24 @@ export default function Home() {
   const [k, setK] = useState(40);
   const [omega, setOmega] = useState(5);
   const [stateVector, setStateVector] = useState(null);
+  const [diagramTrigger, setDiagramTrigger] = useState(0);
   const visualizerRef = React.useRef(null);
 
-  // Re-run quantum calculation whenever qubits or gates change
+  // Re-run quantum calculation and trigger diagram
   useEffect(() => {
     try {
       const sv = runCircuit(numQubits, gates);
       setStateVector(sv);
+      setDiagramTrigger(prev => prev + 1);
     } catch (err) {
       console.error("Quantum simulation error:", err);
     }
   }, [numQubits, gates]);
+
+  // Trigger diagram on wave dynamics changes too
+  useEffect(() => {
+    setDiagramTrigger(prev => prev + 1);
+  }, [k, omega]);
 
   // UIX Fix: Remove invalid gates when qubit count is lowered
   useEffect(() => {
@@ -59,6 +67,13 @@ export default function Home() {
         stateVector={stateVector}
         k={k}
         omega={omega}
+      />
+
+      {/* Circuit ASCII Map (stacked top-left) */}
+      <CircuitDiagram
+        numQubits={numQubits}
+        gates={gates}
+        trigger={diagramTrigger}
       />
 
       {/* Hero Text / Subtle Title */}
