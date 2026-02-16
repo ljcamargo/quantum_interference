@@ -28,6 +28,20 @@ export default function Home() {
     }
   }, [numQubits, gates]);
 
+  // UIX Fix: Remove invalid gates when qubit count is lowered
+  useEffect(() => {
+    const validGates = gates.filter(gate => {
+      if (gate.target >= numQubits) return false;
+      if (gate.control !== undefined && gate.control >= numQubits) return false;
+      if (gate.control1 !== undefined && gate.control1 >= numQubits) return false;
+      if (gate.control2 !== undefined && gate.control2 >= numQubits) return false;
+      return true;
+    });
+    if (validGates.length !== gates.length) {
+      setGates(validGates);
+    }
+  }, [numQubits]);
+
   const handleDownload = () => {
     const canvas = visualizerRef.current;
     if (!canvas) return;

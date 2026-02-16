@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ArrowDownTrayIcon, BeakerIcon } from '@heroicons/react/24/outline';
 
 const GATE_TYPES = ['H', 'X', 'S', 'T', 'CNOT', 'CCNOT'];
 
@@ -38,6 +39,38 @@ const ControlPanel = ({
         setGates([...gates, newGate]);
     };
 
+    const handleRandom = () => {
+        const newNumQubits = Math.floor(Math.random() * 4) + 1; // 1 to 4
+        setNumQubits(newNumQubits);
+
+        const numNewGates = Math.floor(Math.random() * 4); // 0 to 3
+        const newGates = [];
+        for (let i = 0; i < numNewGates; i++) {
+            let type = GATE_TYPES[Math.floor(Math.random() * GATE_TYPES.length)];
+
+            // Downgrade multi-qubit gates if not enough qubits
+            if (newNumQubits === 1 && (type === 'CNOT' || type === 'CCNOT')) type = 'H';
+            if (newNumQubits === 2 && type === 'CCNOT') type = 'CNOT';
+
+            const t = Math.floor(Math.random() * newNumQubits);
+
+            if (type === 'CNOT') {
+                let c = Math.floor(Math.random() * newNumQubits);
+                while (c === t) c = Math.floor(Math.random() * newNumQubits);
+                newGates.push({ type, control: c, target: t });
+            } else if (type === 'CCNOT') {
+                let c1 = Math.floor(Math.random() * newNumQubits);
+                while (c1 === t) c1 = Math.floor(Math.random() * newNumQubits);
+                let c2 = Math.floor(Math.random() * newNumQubits);
+                while (c2 === t || c2 === c1) c2 = Math.floor(Math.random() * newNumQubits);
+                newGates.push({ type, control1: c1, control2: c2, target: t });
+            } else {
+                newGates.push({ type, target: t });
+            }
+        }
+        setGates(newGates);
+    };
+
     const removeGate = (index) => {
         setGates(gates.filter((_, i) => i !== index));
     };
@@ -45,16 +78,23 @@ const ControlPanel = ({
     return (
         <div className="fixed right-8 top-8 w-80 glass p-6 rounded-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
 
-            {/* Download Section - NOW AT TOP */}
-            <button
-                onClick={onDownload}
-                className="w-full bg-matrix-green hover:bg-white text-black font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] group font-title text-xs tracking-wide mb-2"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-y-1 transition-transform">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y1="3" />
-                </svg>
-                DOWNLOAD
-            </button>
+            {/* Actions Section */}
+            <div className="flex gap-2 mb-2">
+                <button
+                    onClick={onDownload}
+                    className="flex-1 bg-matrix-green hover:bg-white text-black font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] group font-title text-[10px] tracking-widest"
+                >
+                    <ArrowDownTrayIcon className="w-4 h-4 text-black group-hover:translate-y-0.5 transition-transform" />
+                    DOWNLOAD
+                </button>
+                <button
+                    onClick={handleRandom}
+                    className="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-white/20 font-title text-[10px] tracking-widest"
+                >
+                    <BeakerIcon className="w-4 h-4 text-matrix-green" />
+                    RANDOM
+                </button>
+            </div>
 
             {/* Wave Dynamics Section (previously Classical) */}
             <div className="flex flex-col gap-4 p-4 border border-matrix-green/20 rounded-lg bg-black/20">
