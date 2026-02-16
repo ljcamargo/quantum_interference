@@ -40,17 +40,33 @@ const ControlPanel = ({
     };
 
     const handleRandom = () => {
-        const newNumQubits = Math.floor(Math.random() * 4) + 1; // 1 to 4
+        let newNumQubits = Math.floor(Math.random() * 4) + 1; // 1 to 4
         setNumQubits(newNumQubits);
 
-        const numNewGates = Math.floor(Math.random() * 4); // 0 to 3
+        let numNewGates = Math.floor(Math.random() * 4); // 0 to 3
+
+        // Slight bias: if 0 gates are chosen, 70% chance to force at least 1 
+        // to avoid too many "blank" screens during random clicks
+        if (numNewGates === 0 && Math.random() < 0.7) numNewGates = 1;
+
         const newGates = [];
+        // Ensure at least one Hadamard 90% of the time if we have gates
+        const shouldEnsureH = Math.random() < 0.9 && numNewGates > 0;
+        let currentHCount = 0;
+
         for (let i = 0; i < numNewGates; i++) {
             let type = GATE_TYPES[Math.floor(Math.random() * GATE_TYPES.length)];
+
+            // If we reach the last gate and still no Hadamard, force it
+            if (shouldEnsureH && i === numNewGates - 1 && currentHCount === 0) {
+                type = 'H';
+            }
 
             // Downgrade multi-qubit gates if not enough qubits
             if (newNumQubits === 1 && (type === 'CNOT' || type === 'CCNOT')) type = 'H';
             if (newNumQubits === 2 && type === 'CCNOT') type = 'CNOT';
+
+            if (type === 'H') currentHCount++;
 
             const t = Math.floor(Math.random() * newNumQubits);
 
