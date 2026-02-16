@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { ArrowDownTrayIcon, BeakerIcon } from '@heroicons/react/24/outline';
-
-const GATE_TYPES = ['H', 'X', 'S', 'T', 'CNOT', 'CCNOT'];
+import { GATE_TYPES, generateRandomCircuit } from '../lib/quantum/utils';
 
 const ControlPanel = ({
     numQubits, setNumQubits,
@@ -41,51 +40,9 @@ const ControlPanel = ({
     };
 
     const handleRandom = () => {
-        let newNumQubits = Math.floor(Math.random() * 4) + 1; // 1 to 4
-        setNumQubits(newNumQubits);
-
-        let numNewGates = Math.floor(Math.random() * 4); // 0 to 3
-
-        // Slight bias: if 0 gates are chosen, 70% chance to force at least 1 
-        // to avoid too many "blank" screens during random clicks
-        if (numNewGates === 0 && Math.random() < 0.7) numNewGates = 1;
-
-        const newGates = [];
-        // Ensure at least one Hadamard 90% of the time if we have gates
-        const shouldEnsureH = Math.random() < 0.9 && numNewGates > 0;
-        let currentHCount = 0;
-
-        for (let i = 0; i < numNewGates; i++) {
-            let type = GATE_TYPES[Math.floor(Math.random() * GATE_TYPES.length)];
-
-            // If we reach the last gate and still no Hadamard, force it
-            if (shouldEnsureH && i === numNewGates - 1 && currentHCount === 0) {
-                type = 'H';
-            }
-
-            // Downgrade multi-qubit gates if not enough qubits
-            if (newNumQubits === 1 && (type === 'CNOT' || type === 'CCNOT')) type = 'H';
-            if (newNumQubits === 2 && type === 'CCNOT') type = 'CNOT';
-
-            if (type === 'H') currentHCount++;
-
-            const t = Math.floor(Math.random() * newNumQubits);
-
-            if (type === 'CNOT') {
-                let c = Math.floor(Math.random() * newNumQubits);
-                while (c === t) c = Math.floor(Math.random() * newNumQubits);
-                newGates.push({ type, control: c, target: t });
-            } else if (type === 'CCNOT') {
-                let c1 = Math.floor(Math.random() * newNumQubits);
-                while (c1 === t) c1 = Math.floor(Math.random() * newNumQubits);
-                let c2 = Math.floor(Math.random() * newNumQubits);
-                while (c2 === t || c2 === c1) c2 = Math.floor(Math.random() * newNumQubits);
-                newGates.push({ type, control1: c1, control2: c2, target: t });
-            } else {
-                newGates.push({ type, target: t });
-            }
-        }
-        setGates(newGates);
+        const { numQubits: n, gates: g } = generateRandomCircuit();
+        setNumQubits(n);
+        setGates(g);
     };
 
     const removeGate = (index) => {

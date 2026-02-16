@@ -6,14 +6,11 @@ import ControlPanel from '../components/ControlPanel';
 import CircuitDiagram from '../components/CircuitDiagram';
 import AboutOverlay from '../components/AboutOverlay';
 import { runCircuit } from '../lib/quantum/engine';
+import { generateRandomCircuit } from '../lib/quantum/utils';
 
 export default function Home() {
   const [numQubits, setNumQubits] = useState(3);
-  const [gates, setGates] = useState([
-    { type: 'H', target: 0 },
-    { type: 'H', target: 1 },
-    { type: 'H', target: 2 }
-  ]);
+  const [gates, setGates] = useState([]);
 
   const [k, setK] = useState(40);
   const [omega, setOmega] = useState(5);
@@ -21,6 +18,13 @@ export default function Home() {
   const [diagramTrigger, setDiagramTrigger] = useState(0);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const visualizerRef = React.useRef(null);
+
+  // Initial random circuit
+  useEffect(() => {
+    const { numQubits: n, gates: g } = generateRandomCircuit(true);
+    setNumQubits(n);
+    setGates(g);
+  }, []);
 
   // Re-run quantum calculation and trigger diagram
   useEffect(() => {
