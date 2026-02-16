@@ -5,24 +5,45 @@ import { Squares2X2Icon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outli
 
 const CircuitDiagram = ({ numQubits, gates, trigger }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [isManual, setIsManual] = useState(false);
     const timerRef = useRef(null);
+    const lastTriggerProcessed = useRef(trigger);
 
-    // Auto-show and auto-hide logic (only for automatic triggers)
+    const clearTimer = () => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
+    // Auto-trigger logic (For Random / Control Panel changes)
     useEffect(() => {
-        if (trigger > 0 && !isManual) {
+        if (trigger > lastTriggerProcessed.current) {
+            lastTriggerProcessed.current = trigger;
+
+            // Mutations always show and schedule a timer to hide
+            clearTimer();
             setIsVisible(true);
-            if (timerRef.current) clearTimeout(timerRef.current);
             timerRef.current = setTimeout(() => {
                 setIsVisible(false);
-            }, 4000); // Hide after 4 seconds
+                timerRef.current = null;
+            }, 4000);
         }
-    }, [trigger, isManual]);
+    }, [trigger]);
+
+    const handleManualShow = (e) => {
+        e.stopPropagation();
+        clearTimer(); // Cancel any existing hide timer
+        setIsVisible(true); // Show immediately, no new timer scheduled
+    };
+
+    const handleManualHide = (e) => {
+        e.stopPropagation();
+        clearTimer(); // Cancel any existing hide timer
+        setIsVisible(false); // Hide immediately, no new timer scheduled
+    };
 
     const generateASCII = () => {
         if (numQubits <= 0) return '';
-
-        // Slicing algorithm: place gates in layers
         const layers = [];
         const isOccupied = (layer, qubits) => qubits.some(q => layer[q] !== undefined);
 
@@ -81,32 +102,34 @@ const CircuitDiagram = ({ numQubits, gates, trigger }) => {
         return lines.join('\n');
     };
 
-    const toggleManual = () => {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        const newManual = !isManual;
-        setIsManual(newManual);
-        setIsVisible(newManual);
-    };
-
     return (
         <div className="lg:fixed lg:left-8 lg:top-8 z-50 flex flex-col items-stretch lg:items-start gap-4 pointer-events-none w-full lg:w-auto p-4 lg:p-0">
-            <div className={`glass p-5 rounded-2xl transition-all duration-500 pointer-events-auto border border-matrix-green/20 ${isVisible ? 'opacity-100' : 'lg:opacity-80'}`}>
+            <div className={`glass p-5 rounded-2xl transition-all duration-500 pointer-events-auto border border-matrix-green/20 ${isVisible ? 'opacity-100 shadow-[0_0_30px_rgba(0,255,65,0.1)]' : 'lg:opacity-80'}`}>
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <Squares2X2Icon className="w-5 h-5 text-matrix-green" />
-                        <span className="font-title text-[10px] tracking-[0.2em] text-matrix-green font-bold">CIRCUIT VIEWER</span>
+                        <span className="font-title text-[9px] tracking-[0.2em] text-matrix-green font-bold">CIRCUIT VIEWER</span>
                     </div>
-                    <button
-                        onClick={toggleManual}
-                        className={`flex items-center gap-2 text-[10px] font-black px-3 py-1.5 rounded transition-all border font-title tracking-widest ${isManual ? 'bg-matrix-green text-black border-matrix-green' : 'text-matrix-green border-matrix-green/30 hover:bg-matrix-green/20'}`}
-                    >
-                        {isManual ? <EyeSlashIcon className="w-3 h-3" /> : <EyeIcon className="w-3 h-3" />}
-                        {isManual ? 'HIDE' : 'SHOW'}
-                    </button>
+
+                    {isVisible ? (
+                        <button
+                            onClick={handleManualHide}
+                            className="flex items-center gap-1 text-[8px] font-black px-3 py-1.5 rounded transition-all border font-title tracking-widest text-red-400 border-red-500/30 hover:bg-red-500/10 active:scale-95"
+                        >
+                            <EyeSlashIcon className="w-3 h-3" /> HIDE
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleManualShow}
+                            className="flex items-center gap-1 text-[8px] font-black px-3 py-1.5 rounded transition-all border font-title tracking-widest text-matrix-green border-matrix-green/30 hover:bg-matrix-green/10 active:scale-95"
+                        >
+                            <EyeIcon className="w-3 h-3" /> SHOW
+                        </button>
+                    )}
                 </div>
 
                 {isVisible && (
-                    <div className="bg-black/80 rounded-xl p-4 border border-matrix-green/10 overflow-x-auto custom-scrollbar shadow-inner">
+                    <div className="bg-black/80 rounded-xl p-4 border border-matrix-green/10 overflow-x-auto custom-scrollbar shadow-inner animate-in fade-in zoom-in-95 duration-200">
                         <pre className="font-doto text-[18px] lg:text-[22px] leading-tight text-white whitespace-pre">
                             {generateASCII()}
                         </pre>
