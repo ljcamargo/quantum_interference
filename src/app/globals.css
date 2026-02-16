@@ -5,6 +5,7 @@
 @theme {
   --color-matrix-green: #00ff41;
   --color-matrix-dark: #003b00;
+  --color-matrix-clear: #fafafa;
   --font-doto: "Doto", system-ui;
   --font-suse: "SUSE Mono", monospace;
 }

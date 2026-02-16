@@ -116,7 +116,7 @@ const ControlPanel = ({
 
                 <button
                     onClick={onOpenAbout}
-                    className="text-[9px] text-matrix-green/40 hover:text-matrix-green uppercase tracking-[0.2em] font-title transition-colors flex items-center justify-center gap-2 group"
+                    className="text-white text-[10px] text-matrix-dark hover:text-matrix-clear uppercase tracking-[0.2em] font-title transition-colors flex items-center justify-center gap-2 group"
                 >
                     <span className="w-4 h-px bg-matrix-green/20 group-hover:bg-matrix-green/40 transition-colors"></span>
                     LEARN ABOUT THIS EXPERIMENT

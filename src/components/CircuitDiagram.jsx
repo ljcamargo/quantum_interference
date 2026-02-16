@@ -104,7 +104,7 @@ const CircuitDiagram = ({ numQubits, gates, trigger }) => {
     return (
         <div className="lg:fixed lg:left-8 lg:top-8 z-50 flex flex-col items-stretch lg:items-start gap-4 pointer-events-none w-full lg:w-auto p-4 lg:p-0">
             <div className={`glass p-5 rounded-2xl transition-all duration-700 pointer-events-auto border border-matrix-green/20 ${isVisible ? 'opacity-100 shadow-[0_0_40px_rgba(0,255,65,0.15)] translate-y-0' : 'opacity-80 lg:translate-x-[-10px]'}`}>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Squares2X2Icon className="w-5 h-5 text-matrix-green" />
                         <span className="font-title text-[9px] tracking-[0.2em] text-matrix-green font-bold">CIRCUIT VIEWER</span>
@@ -113,14 +113,14 @@ const CircuitDiagram = ({ numQubits, gates, trigger }) => {
                     {isVisible ? (
                         <button
                             onClick={handleManualHide}
-                            className="flex items-center gap-1 text-[8px] font-black px-3 py-1.5 rounded transition-all border font-title tracking-widest text-red-400 border-red-500/30 hover:bg-red-500/20 active:scale-90"
+                            className="flex items-center gap-1 text-[8px] font-black ml-4 px-3 py-1.5 rounded transition-all border font-title tracking-widest text-red-400 border-red-500/30 hover:bg-red-500/20 active:scale-90"
                         >
                             <EyeSlashIcon className="w-3 h-3" /> HIDE
                         </button>
                     ) : (
                         <button
                             onClick={handleManualShow}
-                            className="flex items-center gap-1 text-[8px] font-black px-3 py-1.5 rounded transition-all border font-title tracking-widest text-matrix-green border-matrix-green/30 hover:bg-matrix-green/20 active:scale-95 animate-pulse"
+                            className="flex items-center gap-1 text-[8px] font-black ml-4 px-3 py-1.5 rounded transition-all border font-title tracking-widest text-matrix-green border-matrix-green/30 hover:bg-matrix-green/20 active:scale-95 animate-pulse"
                         >
                             <EyeIcon className="w-3 h-3" /> SHOW
                         </button>
