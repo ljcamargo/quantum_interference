@@ -21,14 +21,18 @@ body {
   overflow: hidden;
 }
 
-.font-title {
-  font-family: var(--font-doto);
+.font-title,
+.font-doto {
+  font-family: var(--font-doto), "Doto", sans-serif !important;
+}
+
+.font-suse {
+  font-family: var(--font-suse), "SUSE Mono", monospace !important;
 }
 
 .glass {
   background: rgba(0, 50, 0, 0.2);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(2.0);
   border: 1px solid rgba(0, 255, 65, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
