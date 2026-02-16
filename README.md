@@ -49,6 +49,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - **Inject Gate**: Apply unitary transformations to perturb the field and create entanglement.
 - **Download**: Capture the current interference pattern as a high-resolution PNG.
 
+## 📚 References
+This project takes ideas on how to render the interference pattern from the work of:
+
+- Ruimy, R., Tziperman, O., Gorlach, A., Mølmer, K., & Kaminer, I. (2024). Many-body entanglement via ‘which-path’ information. *npj Quantum Information*, 10(1), 121. [https://doi.org/10.1038/s41534-024-00899-6](https://doi.org/10.1038/s41534-024-00899-6)
+- SSS Quantum. (n.d.). *What is Quantum Interference?* Medium. [https://medium.com/sss-quantum/what-is-quantum-interference-52d1d7fa0517](https://medium.com/sss-quantum/what-is-quantum-interference-52d1d7fa0517)
+
 ## 📜 License
 MIT
 

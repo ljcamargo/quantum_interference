@@ -10,7 +10,8 @@ const ControlPanel = ({
     gates, setGates,
     k, setK,
     omega, setOmega,
-    onDownload
+    onDownload,
+    onOpenAbout
 }) => {
     const [selectedGate, setSelectedGate] = useState('H');
     const [target, setTarget] = useState(0);
@@ -95,20 +96,31 @@ const ControlPanel = ({
         <div className="relative lg:fixed lg:right-8 lg:top-8 w-full lg:w-80 glass p-6 rounded-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto lg:overflow-y-auto mb-8 lg:mb-0">
 
             {/* Actions Section */}
-            <div className="flex gap-2 mb-2">
+            <div className="flex flex-col gap-3">
+                <div className="flex gap-2">
+                    <button
+                        onClick={onDownload}
+                        className="flex-1 bg-matrix-green hover:bg-white text-black font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] group font-title text-[10px] tracking-widest"
+                    >
+                        <ArrowDownTrayIcon className="w-4 h-4 text-black group-hover:translate-y-0.5 transition-transform" />
+                        DOWNLOAD
+                    </button>
+                    <button
+                        onClick={handleRandom}
+                        className="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-white/20 font-title text-[10px] tracking-widest"
+                    >
+                        <BeakerIcon className="w-4 h-4 text-matrix-green" />
+                        RANDOM
+                    </button>
+                </div>
+
                 <button
-                    onClick={onDownload}
-                    className="flex-1 bg-matrix-green hover:bg-white text-black font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] group font-title text-[10px] tracking-widest"
+                    onClick={onOpenAbout}
+                    className="text-[9px] text-matrix-green/40 hover:text-matrix-green uppercase tracking-[0.2em] font-title transition-colors flex items-center justify-center gap-2 group"
                 >
-                    <ArrowDownTrayIcon className="w-4 h-4 text-black group-hover:translate-y-0.5 transition-transform" />
-                    DOWNLOAD
-                </button>
-                <button
-                    onClick={handleRandom}
-                    className="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-white/20 font-title text-[10px] tracking-widest"
-                >
-                    <BeakerIcon className="w-4 h-4 text-matrix-green" />
-                    RANDOM
+                    <span className="w-4 h-px bg-matrix-green/20 group-hover:bg-matrix-green/40 transition-colors"></span>
+                    LEARN ABOUT THIS EXPERIMENT
+                    <span className="w-4 h-px bg-matrix-green/20 group-hover:bg-matrix-green/40 transition-colors"></span>
                 </button>
             </div>
 

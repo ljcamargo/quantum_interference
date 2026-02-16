@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuantumVisualizer from '../components/QuantumVisualizer';
 import ControlPanel from '../components/ControlPanel';
 import CircuitDiagram from '../components/CircuitDiagram';
+import AboutOverlay from '../components/AboutOverlay';
 import { runCircuit } from '../lib/quantum/engine';
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
   const [omega, setOmega] = useState(5);
   const [stateVector, setStateVector] = useState(null);
   const [diagramTrigger, setDiagramTrigger] = useState(0);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const visualizerRef = React.useRef(null);
 
   // Re-run quantum calculation and trigger diagram
@@ -91,6 +93,7 @@ export default function Home() {
             omega={omega}
             setOmega={setOmega}
             onDownload={handleDownload}
+            onOpenAbout={() => setIsAboutOpen(true)}
           />
         </div>
 
@@ -110,6 +113,11 @@ export default function Home() {
         </div>
 
       </div>
+
+      <AboutOverlay
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+      />
     </main>
   );
 }
