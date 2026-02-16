@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+    <main className="relative min-h-screen w-full flex flex-col lg:items-center lg:justify-center">
       {/* The Visualizer acts as the background */}
       <QuantumVisualizer
         ref={visualizerRef}
@@ -69,39 +69,47 @@ export default function Home() {
         omega={omega}
       />
 
-      {/* Circuit ASCII Map (stacked top-left) */}
-      <CircuitDiagram
-        numQubits={numQubits}
-        gates={gates}
-        trigger={diagramTrigger}
-      />
+      {/* Responsive Content Container */}
+      <div className="relative z-10 w-full flex flex-col lg:block min-h-screen overflow-y-auto lg:overflow-hidden">
 
-      {/* Hero Text / Subtle Title */}
-      <div className="absolute left-10 bottom-10 pointer-events-none select-none">
-        <h2 className="text-6xl font-black glossy-text tracking-tighter opacity-60 font-title">
-          Quantum Interference
-        </h2>
-        <div className="mt-2">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-matrix-green opacity-40">
-            Quantum Probability Amplitude Field simulation // v1.1.0
-          </p>
-          <p className="text-[10px] uppercase tracking-[0.1em] text-matrix-green opacity-30 mt-1">
-            by Luis J Camargo, copyleft 2026
-          </p>
+        {/* Circuit Viewer: Top on mobile, Top-Left on desktop */}
+        <CircuitDiagram
+          numQubits={numQubits}
+          gates={gates}
+          trigger={diagramTrigger}
+        />
+
+        {/* Control Panel: Mid on mobile, Top-Right on desktop */}
+        <div className="lg:contents">
+          <ControlPanel
+            numQubits={numQubits}
+            setNumQubits={setNumQubits}
+            gates={gates}
+            setGates={setGates}
+            k={k}
+            setK={setK}
+            omega={omega}
+            setOmega={setOmega}
+            onDownload={handleDownload}
+          />
         </div>
-      </div>
 
-      <ControlPanel
-        numQubits={numQubits}
-        setNumQubits={setNumQubits}
-        gates={gates}
-        setGates={setGates}
-        k={k}
-        setK={setK}
-        omega={omega}
-        setOmega={setOmega}
-        onDownload={handleDownload}
-      />
+        {/* Hero Title: Bottom on mobile, Bottom-Left on desktop */}
+        <div className="mt-auto p-8 lg:p-0 lg:absolute lg:left-10 lg:bottom-10 pointer-events-none select-none">
+          <h2 className="text-4xl lg:text-6xl font-black glossy-text tracking-tighter opacity-70 font-title">
+            Quantum Interference
+          </h2>
+          <div className="mt-2">
+            <p className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-matrix-green opacity-40">
+              Quantum Probability Amplitude Field simulation // v1.2.0
+            </p>
+            <p className="text-[9px] lg:text-[10px] uppercase tracking-[0.1em] text-matrix-green opacity-30 mt-1">
+              by Luis J Camargo, copyleft 2026
+            </p>
+          </div>
+        </div>
+
+      </div>
     </main>
   );
 }

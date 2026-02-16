@@ -116,7 +116,7 @@ const QuantumVisualizer = React.forwardRef(({ stateVector, k = 40, omega = 5 }, 
     return (
         <canvas
             ref={innerRef}
-            className="fixed inset-0 w-full h-full -z-10 bg-black opacity-80"
+            className="fixed inset-0 w-full h-full z-0 pointer-events-none"
             style={{ filter: 'blur(2px) contrast(1.2) brightness(1.2)' }}
             width={dimensions.width}
             height={dimensions.height}

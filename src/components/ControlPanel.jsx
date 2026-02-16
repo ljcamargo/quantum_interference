@@ -76,7 +76,7 @@ const ControlPanel = ({
     };
 
     return (
-        <div className="fixed right-8 top-8 w-80 glass p-6 rounded-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
+        <div className="relative lg:fixed lg:right-8 lg:top-8 w-full lg:w-80 glass p-6 rounded-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto lg:overflow-y-auto mb-8 lg:mb-0">
 
             {/* Actions Section */}
             <div className="flex gap-2 mb-2">
